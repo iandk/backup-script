@@ -16,3 +16,10 @@ endpoint = https://[ACCOUNT_ID].eu.r2.cloudflarestorage.com
 acl = private
 no_check_bucket = true
 ```
+
+```
+rclone tree cloudflare:
+```
+
+
+
