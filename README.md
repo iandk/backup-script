@@ -1,9 +1,20 @@
 # backup-script
-
+```
+wget -qO /usr/local/bin/backup https://raw.githubusercontent.com/iandk/backup-script/main/backup.sh && chmod +x /usr/local/bin/backup && nano /usr/local/bin/backup
+```
 ```
 apt install rclone -y
 rclone config file
 ```
+```
+crontab -e 
+@daily /usr/local/bin/backup
+
+```
+
+
+
+
 
 
 ```
