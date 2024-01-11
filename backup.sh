@@ -9,7 +9,10 @@ ARCHIVE_PATH="/backup/backup_${DATE}.tar.gz"
 RCLONE_REMOTE="cloudflare"  # The name of the rclone remote you set up
 RCLONE_PATH="backup/"  # The path on R2 where you want the backup stored, usually the name of the bucket
 RETAIN_DAYS=7  # Number of days to retain backups
-
+INCLUDE_DATABASES=false  # Set to true to include database backup
+MYSQL_USER="root"  # MySQL/MariaDB username
+MYSQL_PASSWORD=""  # MySQL/MariaDB password (leave empty if not required)
+DB_BACKUP_FILE="${BACKUP_DIR}/all_databases.sql"
 
 # --- Backup Section ---
 mkdir -p "${BACKUP_DIR}"
@@ -29,6 +32,15 @@ for file in "${FILES_TO_BACKUP[@]}"; do
     echo "Warning: File ${file} not found!"
   fi
 done
+
+# Database backup if enabled
+if [[ "${INCLUDE_DATABASES}" == "true" ]]; then
+  if [[ -n "${MYSQL_PASSWORD}" ]]; then
+    mysqldump --all-databases -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" > "${DB_BACKUP_FILE}"
+  else
+    mysqldump --all-databases -u "${MYSQL_USER}" > "${DB_BACKUP_FILE}"
+  fi
+fi
 
 # Archive the backup directory
 tar -czf "${ARCHIVE_PATH}" -C "/backup" "${DATE}"
